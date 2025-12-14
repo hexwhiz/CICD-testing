@@ -66,31 +66,52 @@ h1{
 .keys{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:10px;
+  gap:14px;
+  align-items:end;
 }
 
 .key{
-  background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.25));
+  background:var(--panel);
   border:0;
   color:var(--key);
-  padding:14px 8px;
-  border-radius:8px;
-  font-size:18px;
+  padding:0;
+  border-radius:50%;
+  font-size:20px;
   cursor:pointer;
-  box-shadow: 0 4px 10px rgba(2,6,23,0.5);
+  box-shadow: 0 6px 12px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  aspect-ratio:1/1;
 }
 .key:active{transform:translateY(1px)}
-.key.digit{background:linear-gradient(180deg,#1f2937,#111827)}
-.key.equals{grid-column:3/5;background:linear-gradient(90deg,#06b6d4,#3b82f6);font-weight:700}
+
+/* digit keys dark gray */
+.key.digit{background:linear-gradient(180deg,#50555b,#33363a);color:#fff}
+
+/* function keys (top row) light */
+.key:nth-child(1), .key:nth-child(2), .key:nth-child(3){
+  background:linear-gradient(180deg,#e9e9eb,#d1d1d6);
+  color:#111;
+}
+
+/* operator keys orange */
+.key.operator{background:linear-gradient(180deg,#ff9f0a,#ff7a00);color:#fff}
+
+/* equals occupies two rows (placed in source at row 4 so it spans down)
+   and zero spans 2 columns (pill) */
+.key.equals{grid-row: span 2; background:linear-gradient(180deg,#ff9f0a,#ff7a00); font-weight:700}
+.key.zero{grid-column: span 2; border-radius: 999px; justify-content:flex-start; padding-left:28px}
 
 .hint{font-size:12px;color:var(--muted);margin-top:10px}
+
 
 @media (max-width:480px){
   .app{margin:12px;padding:10px}
   .display .value{font-size:22px}
-  .key{padding:10px;font-size:16px}
+  .key{font-size:18px}
   .display{min-height:56px}
-  .keys{gap:8px}
+  .keys{gap:10px}
 }
 
 @media (max-width:360px){

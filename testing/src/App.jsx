@@ -59,8 +59,26 @@ export default function App() {
       setDisplay('0')
       return
     }
-    if (value === '⌫') {
-      setExpr((s) => s.slice(0, -1))
+    if (value === '±') {
+      // toggle sign of the last number in the expression
+      setExpr((s) => {
+        if (!s) return s
+        // replace last number
+        return s.replace(/(-?\d*\.?\d+)$/,(m)=> (m.startsWith('-') ? m.slice(1) : '-' + m))
+      })
+      return
+    }
+    if (value === '%') {
+      // convert current value to percentage (divide by 100)
+      const res = evaluateExpression(expr || display)
+      if (res === 'Error') {
+        setDisplay('Error')
+        setExpr('')
+      } else {
+        const perc = String(Number(res) / 100)
+        setExpr(perc)
+        setDisplay(perc)
+      }
       return
     }
     if (value === '=') {
@@ -73,11 +91,11 @@ export default function App() {
   }
 
   const buttons = [
-    'C', '⌫', '(', ')',
-    '7', '8', '9', '÷',
-    '4', '5', '6', '×',
-    '1', '2', '3', '-',
-    '0', '.', '=', '+',
+     'C', '±', '%', '÷',
+     '7', '8', '9', '×',
+     '4', '5', '6', '-',
+     '1', '2', '3', '+',
+     '0', '.', '=',
   ]
 
   return (
@@ -89,16 +107,25 @@ export default function App() {
           <div className="value">{display}</div>
         </div>
         <div className="keys">
-          {buttons.map((b) => (
-            <button
-              key={b}
-              className={`key ${/\d/.test(b) ? 'digit' : ''} ${b === '=' ? 'equals' : ''}`}
-              onClick={() => press(b)}
-              aria-label={b}
-            >
-              {b}
-            </button>
-          ))}
+          {buttons.map((b, i) => {
+            const isDigit = /\d/.test(b)
+            const isOperator = ['÷', '×', '+', '-'].includes(b)
+            const classes = ['key']
+            if (isDigit) classes.push('digit')
+            if (b === '0') classes.push('zero')
+            if (b === '=') classes.push('equals')
+            if (isOperator) classes.push('operator')
+            return (
+              <button
+                key={b + i}
+                className={classes.join(' ')}
+                onClick={() => press(b)}
+                aria-label={b}
+              >
+                {b}
+              </button>
+            )
+          })}
         </div>
       </div>
       <p className="hint">Tip: use keyboard numbers, Enter for =, Backspace to delete, C to clear.</p>
