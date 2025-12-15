@@ -24,6 +24,7 @@ function evaluateExpression(expr) {
 export default function App() {
   const [expr, setExpr] = useState('')
   const [display, setDisplay] = useState('0')
+  const [dark, setDark] = useState(false)
   const containerRef = useRef(null)
 
   useEffect(() => {
@@ -99,9 +100,15 @@ export default function App() {
   ]
 
   return (
-    <div className="app" ref={containerRef}>
-      <h1>Calculator</h1>
+    <div className={`app ${dark ? 'theme-dark' : 'theme-light'}`} ref={containerRef}>
       <div className="calculator">
+        <div className="header">
+          <button className="switch" onClick={() => setDark((d) => !d)} aria-label="Toggle theme">
+            <span className="switch-dot" />
+            <span>{dark ? 'Switch to Light' : 'Switch to Dark'}</span>
+          </button>
+          <div className="notch" />
+        </div>
         <div className="display" role="status" aria-live="polite">
           <div className="expr">{expr || ' '}</div>
           <div className="value">{display}</div>
@@ -115,6 +122,7 @@ export default function App() {
             if (b === '0') classes.push('zero')
             if (b === '=') classes.push('equals')
             if (isOperator) classes.push('operator')
+            if (['C','±','%'].includes(b)) classes.push('func')
             return (
               <button
                 key={b + i}
