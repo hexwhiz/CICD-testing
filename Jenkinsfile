@@ -3,12 +3,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/hexwhiz/CICD-testing'
-            }
-        }
-
         stage('Install & Build') {
             steps {
                 dir('testing') {
